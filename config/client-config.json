@@ -1,0 +1,40 @@
+{
+    "version": "1.0",
+    "fields": [
+        {
+            "name": "pm10",
+            "pos": 0,
+            "len": 14,
+            "bias": 0,
+            "mul": 0
+        },
+        {
+            "name": "pm2_5",
+            "pos": 14,
+            "len": 13,
+            "bias": 0,
+            "mul": 0
+        },
+        {
+            "name": "temperature",
+            "pos": 27,
+            "len": 10,
+            "bias": 40,
+            "mul": 0
+        },
+        {
+            "name": "humidity",
+            "pos": 37,
+            "len": 10,
+            "bias": 0,
+            "mul": 0
+        },
+        {
+            "name": "pressure",
+            "pos": 47,
+            "len": 11,
+            "bias": -87000,
+            "mul": 0
+        }
+    ]
+}
