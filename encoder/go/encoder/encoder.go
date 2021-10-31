@@ -1,8 +1,11 @@
 package encoder
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"math"
+	"net/http"
 )
 
 // Encoder represents a binary compression encoder
@@ -17,6 +20,43 @@ func GetEncoder() *Encoder {
 			Version: DefaultEncoderConfigVersion,
 		},
 	}
+}
+
+// LoadConfigFromJSON parses a configuration from a JSON string and attaches it to the encoder
+func (e Encoder) LoadConfigFromJSON(configBytes []byte) error {
+	return json.Unmarshal(configBytes, &e.Config)
+}
+
+func (e Encoder) LoadConfigFromFile(configPath string) error {
+	// Read file at file path
+	content, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		return err
+	}
+	// Parse JSON to config
+	e.LoadConfigFromJSON(content)
+	return nil
+}
+
+// LoadConfigFromUrl parses a configuration from a URL and attaches it to the encoder
+func (e Encoder) LoadConfigFromUrl(configUrl string) error {
+	// Execute web request to get JSON from url
+	response, err := http.Get(configUrl)
+	if err != nil {
+		return err
+	}
+	if response.Body != nil {
+		defer response.Body.Close()
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	// Parse JSON to config
+	e.LoadConfigFromJSON(body)
+	return nil
 }
 
 // Encode executes the compression process and returns the output as byte array
