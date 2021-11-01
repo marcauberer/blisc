@@ -1,11 +1,13 @@
 package encoder
 
 import (
+	"clientlib-go/internal"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
-	"math"
 	"net/http"
+	"reflect"
 )
 
 // Encoder represents a binary compression encoder
@@ -67,10 +69,31 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 	}
 	// Calculate total length of output
 	totalLengthBits := e.Config.GetTotalLength()
-	totalLengthBytes := int(math.Ceil(float64(totalLengthBits) / 8.0))
 	// Encode input based on the instructions from the attached config
-	output := make([]byte, totalLengthBytes)
+	output := internal.NewBitArray(totalLengthBits)
+	v := reflect.ValueOf(input).Elem()
+	for _, field := range e.Config.Fields {
+		value := v.FieldByName(field.Name)
+		switch value.Type().Name() { // Switch by field type name
+		case "int":
+			intValue := value.Int()
+			intValue += int64(field.Bias)
+			intValue = int64(float64(intValue) * field.Mul)
+			fmt.Println(intValue)
+			output.PutInt64(field.Pos, field.Len, intValue)
+		case "float32": // Double field
+			doubleValue := value.Float()
+			doubleValue += float64(field.Bias)
+			doubleValue *= field.Mul
+			intValue := int64(doubleValue)
+			fmt.Println(intValue)
+			output.PutInt64(field.Pos, field.Len, intValue)
+		case "string": // String field
 
+		case "bool": // Boolean field
+
+		}
+	}
 	// Return the output
-	return output, nil
+	return output.ToByteArray(), nil
 }

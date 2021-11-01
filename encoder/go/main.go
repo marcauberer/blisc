@@ -17,10 +17,11 @@ func main() {
 		pm2_5:       6.14,
 		temperature: 25.124,
 		humidity:    78.01,
-		pressure:    1001.923,
+		pressure:    100001.9,
 	}
 	// Encode test payload
 	e := encoder.GetEncoder()
+	e.LoadConfigFromFile("../../config/client-config.json")
 	result, err := e.Encode(&data)
 	if err != nil {
 		panic(err)

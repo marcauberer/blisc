@@ -18,14 +18,22 @@ var DefaultEncoderConfigVersion = EncoderConfigVersion{Major: 1, Minor: 0}
 // EncoderConfigField represents a instruction set for one particular data field
 type EncoderConfigField struct {
 	Name string
-	Pos  int
-	Len  int
+	Type string
+	Pos  uint
+	Len  uint
 	Bias int
-	Mul  int
+	Mul  float64
 }
 
+const (
+	FieldTypeInteger = "int"
+	FieldTypeDouble  = "double"
+	FieldTypeString  = "string"
+	FieldTypeBool    = "bool"
+)
+
 // GetTotalLength returns the total length of the encoding output in bits
-func (c EncoderConfig) GetTotalLength() int {
+func (c EncoderConfig) GetTotalLength() uint {
 	if len(c.Fields) == 0 {
 		return 0
 	}
