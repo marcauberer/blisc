@@ -1,7 +1,7 @@
 package encoder
 
 import (
-	"clientlib-go/internal"
+	"clientlib-go/internal/bitarray"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -70,7 +70,7 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 	// Calculate total length of output
 	totalLengthBits := e.Config.GetTotalLength()
 	// Encode input based on the instructions from the attached config
-	output := internal.NewBitArray(totalLengthBits)
+	output := bitarray.NewBitArray(uint64(totalLengthBits))
 	v := reflect.ValueOf(input).Elem()
 	for _, field := range e.Config.Fields {
 		value := v.FieldByName(field.Name)
@@ -79,15 +79,17 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			intValue := value.Int()
 			intValue += int64(field.Bias)
 			intValue = int64(float64(intValue) * field.Mul)
-			fmt.Println(intValue)
-			output.PutInt64(field.Pos, field.Len, intValue)
+			fmt.Println("Int:", intValue)
+			output.InsertUInt64At(uint64(field.Pos), uint64(intValue))
+			fmt.Println("Stringified:", output.String())
 		case "float32": // Double field
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
 			intValue := int64(doubleValue)
-			fmt.Println(intValue)
-			output.PutInt64(field.Pos, field.Len, intValue)
+			fmt.Println("Double:", intValue)
+			output.InsertUInt64At(uint64(field.Pos), uint64(intValue))
+			fmt.Println("Stringified:", output.String())
 		case "string": // String field
 
 		case "bool": // Boolean field
