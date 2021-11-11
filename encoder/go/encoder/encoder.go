@@ -1,7 +1,7 @@
 package encoder
 
 import (
-	"clientlib-go/internal/bitarray"
+	"clientlib-go/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -69,9 +69,14 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 	}
 	// Calculate total length of output
 	totalLengthBits := e.Config.GetTotalLength()
+	totalLengthBytes := uint64(totalLengthBits / 8)
+	if totalLengthBits%8 > 0 {
+		totalLengthBytes++
+	}
 	// Encode input based on the instructions from the attached config
-	output := bitarray.NewBitArray(uint64(totalLengthBits))
+	output := internal.CreateOutput(totalLengthBytes)
 	v := reflect.ValueOf(input).Elem()
+	// ToDo: Sort fields after position
 	for _, field := range e.Config.Fields {
 		value := v.FieldByName(field.Name)
 		switch value.Type().Name() { // Switch by field type name
@@ -80,16 +85,22 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			intValue += int64(field.Bias)
 			intValue = int64(float64(intValue) * field.Mul)
 			fmt.Println("Int:", intValue)
-			output.InsertUInt64At(uint64(field.Pos), uint64(intValue))
-			fmt.Println("Stringified:", output.String())
+			err := output.PushUInt64(uint64(intValue), uint64(field.Len))
+			if err != nil {
+				return []byte{}, err
+			}
+			fmt.Println("Stringified:", output.ToString(), "\n")
 		case "float32": // Double field
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
 			intValue := int64(doubleValue)
 			fmt.Println("Double:", intValue)
-			output.InsertUInt64At(uint64(field.Pos), uint64(intValue))
-			fmt.Println("Stringified:", output.String())
+			err := output.PushUInt64(uint64(intValue), uint64(field.Len))
+			if err != nil {
+				return []byte{}, err
+			}
+			fmt.Println("Stringified:", output.ToString(), "\n")
 		case "string": // String field
 
 		case "bool": // Boolean field
