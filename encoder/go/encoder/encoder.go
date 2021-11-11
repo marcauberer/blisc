@@ -107,6 +107,8 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 
 		}
 	}
+	// Write last buffer contents to stream
+	output.Conclude()
 	// Return the output
 	return output.ToByteArray(), nil
 }

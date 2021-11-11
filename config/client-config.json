@@ -37,7 +37,7 @@
             "name": "pressure",
             "type": "double",
             "pos": 47,
-            "len": 11,
+            "len": 14,
             "bias": -87000,
             "mul": 0.5
         }

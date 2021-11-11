@@ -27,5 +27,7 @@ func main() {
 		panic(err)
 	}
 	// Print result to the console
-	fmt.Println(string(result))
+	for _, n := range result {
+		fmt.Printf("%08b ", n)
+	}
 }
