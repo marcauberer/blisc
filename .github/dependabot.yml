@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Go dependency updates
+  - package-ecosystem: gomod
+    directory: /encoder/go
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer
+
+  - package-ecosystem: gomod
+    directory: /decoder/go
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 15
+    target-branch: main
+    reviewers:
+      - marcauberer
+    assignees:
+      - marcauberer

@@ -3,38 +3,43 @@
     "fields": [
         {
             "name": "pm10",
+            "type": "double",
             "pos": 0,
             "len": 14,
             "bias": 0,
-            "mul": 0
+            "mul": 10
         },
         {
             "name": "pm2_5",
+            "type": "double",
             "pos": 14,
             "len": 13,
             "bias": 0,
-            "mul": 0
+            "mul": 10
         },
         {
             "name": "temperature",
+            "type": "double",
             "pos": 27,
             "len": 10,
             "bias": 40,
-            "mul": 0
+            "mul": 10
         },
         {
             "name": "humidity",
+            "type": "double",
             "pos": 37,
             "len": 10,
             "bias": 0,
-            "mul": 0
+            "mul": 10
         },
         {
             "name": "pressure",
+            "type": "double",
             "pos": 47,
-            "len": 11,
+            "len": 14,
             "bias": -87000,
-            "mul": 0
+            "mul": 0.5
         }
     ]
 }
