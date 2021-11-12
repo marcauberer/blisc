@@ -4,7 +4,7 @@ name: Go Encoder CI
 on:
   push:
     paths:
-      - cli/**
+      - encoder/go/**
   pull_request:
     branches:
       - main
@@ -53,4 +53,4 @@ jobs:
         run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.9.1/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.9.1
 
       - name: Run security scan
-        run: gosec -exclude=G204 ./...
+        run: gosec ./...
