@@ -21,7 +21,10 @@ func main() {
 	}
 	// Encode test payload
 	e := encoder.GetEncoder()
-	e.LoadConfigFromFile("../../config/client-config.json")
+	err := e.LoadConfigFromFile("../../config/client-config.json")
+	if err != nil {
+		panic(err)
+	}
 	result, err := e.Encode(&data)
 	if err != nil {
 		panic(err)

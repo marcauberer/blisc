@@ -32,18 +32,19 @@ func (e Encoder) LoadConfigFromJSON(configBytes []byte) error {
 
 func (e Encoder) LoadConfigFromFile(configPath string) error {
 	// Read file at file path
+	// #nosec G304
 	content, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		return err
 	}
 	// Parse JSON to config
-	e.LoadConfigFromJSON(content)
-	return nil
+	return e.LoadConfigFromJSON(content)
 }
 
 // LoadConfigFromUrl parses a configuration from a URL and attaches it to the encoder
 func (e Encoder) LoadConfigFromUrl(configUrl string) error {
 	// Execute web request to get JSON from url
+	// #nosec G107
 	response, err := http.Get(configUrl)
 	if err != nil {
 		return err
@@ -58,8 +59,7 @@ func (e Encoder) LoadConfigFromUrl(configUrl string) error {
 	}
 
 	// Parse JSON to config
-	e.LoadConfigFromJSON(body)
-	return nil
+	return e.LoadConfigFromJSON(body)
 }
 
 // Encode executes the compression process and returns the output as byte array
