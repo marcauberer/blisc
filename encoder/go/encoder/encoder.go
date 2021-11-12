@@ -81,7 +81,7 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 	for _, field := range e.Config.Fields {
 		value := v.FieldByName(field.Name)
 		switch value.Type().Name() { // Switch by field type name
-		case "int":
+		case reflect.Int.String():
 			intValue := value.Int()
 			intValue += int64(field.Bias)
 			intValue = int64(math.Round(float64(intValue) * field.Mul))
@@ -91,7 +91,7 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 				return []byte{}, err
 			}
 			fmt.Println("Stringified:", output.ToString())
-		case "float32": // Double field
+		case reflect.Float32.String(): // Double field
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
@@ -102,9 +102,9 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 				return []byte{}, err
 			}
 			fmt.Println("Stringified:", output.ToString())
-		case "string": // String field
+		case reflect.String.String(): // String field
 
-		case "bool": // Boolean field
+		case reflect.Bool.String(): // Boolean field
 			boolValue := value.Bool()
 			intValue := uint64(0)
 			if boolValue {
