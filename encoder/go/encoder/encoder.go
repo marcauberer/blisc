@@ -1,7 +1,7 @@
 package encoder
 
 import (
-	"clientlib-go/internal"
+	"clientlib-encoder/internal"
 	"encoding/json"
 	"errors"
 	"fmt"

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"clientlib-go/encoder"
+	"clientlib-encoder/encoder"
 	"fmt"
 )
 
