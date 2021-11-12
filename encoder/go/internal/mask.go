@@ -5,7 +5,6 @@ import (
 )
 
 func createBitmaskForRange(posHigh, posLow uint64) (uint64, error) {
-	//fmt.Printf("[%d,%d]\n", posLow, posHigh)
 	// If posLow > posHigh, swap the values with the XOR swap algorithm
 	if posLow > posHigh {
 		posHigh = posHigh ^ posLow

@@ -71,7 +71,7 @@ func TestEncode1(t *testing.T) { // Happy path
 	result, err := encoder.Encode(&pmData)
 	// Assert
 	assert.Nil(t, err)
-	assert.Equal(t, []byte{}, result)
+	assert.Equal(t, []byte{0x00, 0x30, 0x00, 0x60, 0x64, 0x02, 0x40, 0x00}, result)
 }
 
 func TestEncode2(t *testing.T) { // Missing config

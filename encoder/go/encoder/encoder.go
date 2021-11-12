@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"reflect"
 )
@@ -83,28 +84,38 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 		case "int":
 			intValue := value.Int()
 			intValue += int64(field.Bias)
-			intValue = int64(float64(intValue) * field.Mul)
+			intValue = int64(math.Round(float64(intValue) * field.Mul))
 			fmt.Println("Int:", intValue)
 			err := output.PushUInt64(uint64(intValue), uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
 			}
-			fmt.Println("Stringified:", output.ToString(), "\n")
+			fmt.Println("Stringified:", output.ToString())
 		case "float32": // Double field
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
-			intValue := int64(doubleValue)
+			intValue := uint64(doubleValue)
 			fmt.Println("Double:", intValue)
-			err := output.PushUInt64(uint64(intValue), uint64(field.Len))
+			err := output.PushUInt64(intValue, uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
 			}
-			fmt.Println("Stringified:", output.ToString(), "\n")
+			fmt.Println("Stringified:", output.ToString())
 		case "string": // String field
 
 		case "bool": // Boolean field
-
+			boolValue := value.Bool()
+			intValue := uint64(0)
+			if boolValue {
+				intValue = 1
+			}
+			fmt.Println("Bool:", intValue)
+			err := output.PushUInt64(intValue, uint64(field.Len))
+			if err != nil {
+				return []byte{}, err
+			}
+			fmt.Println("Stringified:", output.ToString())
 		}
 	}
 	// Write last buffer contents to stream
