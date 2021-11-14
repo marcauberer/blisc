@@ -82,6 +82,10 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 		value := v.FieldByName(field.Name)
 		switch value.Type().Name() { // Switch by field type name
 		case reflect.Int.String():
+			// Check type of field config matches the actual type
+			if field.Type != "int" {
+				return []byte{}, fmt.Errorf("expected int, but got '%s' for field '%s'", field.Type, field.Name)
+			}
 			intValue := value.Int()
 			intValue += int64(field.Bias)
 			intValue = int64(math.Round(float64(intValue) * field.Mul))
@@ -92,6 +96,10 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			}
 			fmt.Println("Stringified:", output.ToString())
 		case reflect.Float32.String(): // Double field
+			// Check type of field config matches the actual type
+			if field.Type != "double" {
+				return []byte{}, fmt.Errorf("expected double, but got '%s' for field '%s'", field.Type, field.Name)
+			}
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
@@ -103,8 +111,15 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			}
 			fmt.Println("Stringified:", output.ToString())
 		case reflect.String.String(): // String field
-
+			// Check type of field config matches the actual type
+			if field.Type != "string" {
+				return []byte{}, fmt.Errorf("expected string, but got '%s' for field '%s'", field.Type, field.Name)
+			}
 		case reflect.Bool.String(): // Boolean field
+			// Check type of field config matches the actual type
+			if field.Type != "bool" {
+				return []byte{}, fmt.Errorf("expected bool, but got '%s' for field '%s'", field.Type, field.Name)
+			}
 			boolValue := value.Bool()
 			intValue := uint64(0)
 			if boolValue {

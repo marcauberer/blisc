@@ -38,7 +38,7 @@ func TestCreateBitmask64FromRange1(t *testing.T) { // Happy path
 	}
 	// Execute test
 	for _, item := range testData {
-		acualResult, actualError := createBitmask64ForRange(item.posHigh, item.posLow)
+		acualResult, actualError := CreateBitmask64ForRange(item.posHigh, item.posLow)
 		assert.Nil(t, actualError)
 		assert.Equal(t, item.expectedResult, acualResult)
 	}
@@ -49,7 +49,7 @@ func TestCreateBitmask64FromRange2(t *testing.T) { // Error
 	posHigh := uint64(65)
 	posLow := uint64(42)
 	// Execute test
-	actualResult, actualError := createBitmask64ForRange(posHigh, posLow)
+	actualResult, actualError := CreateBitmask64ForRange(posHigh, posLow)
 	assert.Equal(t, uint64(0), actualResult)
 	assert.NotNil(t, actualError)
 	assert.Equal(t, "the stated bitmask range [42,65] was invalid", actualError.Error())
@@ -87,7 +87,7 @@ func TestCreateBitmask32FromRange1(t *testing.T) { // Happy path
 	}
 	// Execute test
 	for _, item := range testData {
-		acualResult, actualError := createBitmask32ForRange(item.posHigh, item.posLow)
+		acualResult, actualError := CreateBitmask32ForRange(item.posHigh, item.posLow)
 		assert.Nil(t, actualError)
 		assert.Equal(t, item.expectedResult, acualResult)
 	}
@@ -98,7 +98,7 @@ func TestCreateBitmask32FromRange2(t *testing.T) { // Error
 	posHigh := uint64(33)
 	posLow := uint64(22)
 	// Execute test
-	actualResult, actualError := createBitmask32ForRange(posHigh, posLow)
+	actualResult, actualError := CreateBitmask32ForRange(posHigh, posLow)
 	assert.Equal(t, uint32(0), actualResult)
 	assert.NotNil(t, actualError)
 	assert.Equal(t, "the stated bitmask range [22,33] was invalid", actualError.Error())
@@ -136,7 +136,7 @@ func TestCreateBitmask16FromRange1(t *testing.T) { // Happy path
 	}
 	// Execute test
 	for _, item := range testData {
-		acualResult, actualError := createBitmask16ForRange(item.posHigh, item.posLow)
+		acualResult, actualError := CreateBitmask16ForRange(item.posHigh, item.posLow)
 		assert.Nil(t, actualError)
 		assert.Equal(t, item.expectedResult, acualResult)
 	}
@@ -147,7 +147,7 @@ func TestCreateBitmask16FromRange2(t *testing.T) { // Error
 	posHigh := uint64(17)
 	posLow := uint64(12)
 	// Execute test
-	actualResult, actualError := createBitmask16ForRange(posHigh, posLow)
+	actualResult, actualError := CreateBitmask16ForRange(posHigh, posLow)
 	assert.Equal(t, uint16(0), actualResult)
 	assert.NotNil(t, actualError)
 	assert.Equal(t, "the stated bitmask range [12,17] was invalid", actualError.Error())
@@ -185,7 +185,7 @@ func TestCreateBitmask8FromRange1(t *testing.T) { // Happy path
 	}
 	// Execute test
 	for _, item := range testData {
-		acualResult, actualError := createBitmask8ForRange(item.posHigh, item.posLow)
+		acualResult, actualError := CreateBitmask8ForRange(item.posHigh, item.posLow)
 		assert.Nil(t, actualError)
 		assert.Equal(t, item.expectedResult, acualResult)
 	}
@@ -196,7 +196,7 @@ func TestCreateBitmask8FromRange2(t *testing.T) { // Error
 	posHigh := uint64(9)
 	posLow := uint64(6)
 	// Execute test
-	actualResult, actualError := createBitmask8ForRange(posHigh, posLow)
+	actualResult, actualError := CreateBitmask8ForRange(posHigh, posLow)
 	assert.Equal(t, uint8(0), actualResult)
 	assert.NotNil(t, actualError)
 	assert.Equal(t, "the stated bitmask range [6,9] was invalid", actualError.Error())
