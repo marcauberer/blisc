@@ -77,7 +77,6 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 	// Encode input based on the instructions from the attached config
 	output := internal.CreateOutput(totalLengthBytes)
 	v := reflect.ValueOf(input).Elem()
-	// ToDo: Sort fields after position
 	for _, field := range e.Config.Fields {
 		value := v.FieldByName(field.Name)
 		switch value.Type().Name() { // Switch by field type name
@@ -86,10 +85,12 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			if field.Type != "int" {
 				return []byte{}, fmt.Errorf("expected int, but got '%s' for field '%s'", field.Type, field.Name)
 			}
+			// Apply bias and mul
 			intValue := value.Int()
 			intValue += int64(field.Bias)
 			intValue = int64(math.Round(float64(intValue) * field.Mul))
 			fmt.Println("Int:", intValue)
+			// Push to output byte array
 			err := output.PushUInt64(uint64(intValue), uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
@@ -100,11 +101,13 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			if field.Type != "double" {
 				return []byte{}, fmt.Errorf("expected double, but got '%s' for field '%s'", field.Type, field.Name)
 			}
+			// Apply bias and mul
 			doubleValue := value.Float()
 			doubleValue += float64(field.Bias)
 			doubleValue *= field.Mul
 			intValue := uint64(doubleValue)
 			fmt.Println("Double:", intValue)
+			// Push to output byte array
 			err := output.PushUInt64(intValue, uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
@@ -120,12 +123,14 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			if field.Type != "bool" {
 				return []byte{}, fmt.Errorf("expected bool, but got '%s' for field '%s'", field.Type, field.Name)
 			}
+			// Apply bias and mul
 			boolValue := value.Bool()
 			intValue := uint64(0)
 			if boolValue {
 				intValue = 1
 			}
 			fmt.Println("Bool:", intValue)
+			// Push to output byte array
 			err := output.PushUInt64(intValue, uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
@@ -133,7 +138,7 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			fmt.Println("Stringified:", output.ToString())
 		}
 	}
-	// Write last buffer contents to stream
+	// Flush the content of the last buffer into the stream
 	output.Conclude()
 	// Return the output
 	return output.ToByteArray(), nil
