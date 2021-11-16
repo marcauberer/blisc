@@ -45,7 +45,6 @@ func (o *output) PushUInt64(value uint64, len uint64) error {
 		posLow = 0
 	}
 	bitMask, err := createBitmask64ForRange(len, posLow)
-	fmt.Printf("Bitmask old buffer: %064b\n", bitMask)
 	if err != nil {
 		return err
 	}
@@ -54,7 +53,6 @@ func (o *output) PushUInt64(value uint64, len uint64) error {
 		leftShift = 0
 	}
 	o.buffer |= byte((value & bitMask) << leftShift >> posLow)
-	fmt.Printf("Buffer: %08b\n", o.buffer)
 	inputCurserPos := thisBufferBitsFree
 	if thisBufferBitsAlloc+len < 8 {
 		// Use same buffer for the next round
@@ -81,7 +79,6 @@ func (o *output) PushUInt64(value uint64, len uint64) error {
 	// Step 3: Fill the new buffer
 	if inputCurserPos < len {
 		bitMask, err = createBitmask64ForRange(nextBufferBitsAlloc, 0)
-		fmt.Printf("Bitmask end:%064b\n", bitMask)
 		if err != nil {
 			return err
 		}

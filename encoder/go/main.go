@@ -1,18 +1,20 @@
 package main
 
 import (
-	"clientlib-go/encoder"
+	"clientlib-encoder/encoder"
 	"fmt"
 )
 
+type data struct {
+	pm10        float32
+	pm2_5       float32
+	temperature float32
+	humidity    float32
+	pressure    float32
+}
+
 func main() {
-	data := struct {
-		pm10        float32
-		pm2_5       float32
-		temperature float32
-		humidity    float32
-		pressure    float32
-	}{
+	data := data{
 		pm10:        12.43,
 		pm2_5:       6.14,
 		temperature: 25.124,
