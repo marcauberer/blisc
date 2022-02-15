@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include "config/config.h"
 
 struct TestData {
@@ -15,11 +16,12 @@ int main(int argc, char const *argv[]) {
 
     struct EncoderConfig config;
     loadConfig(&config, "../../config/client-config.bin");
-    printf("%d", config.version.major);
+    printf("%d\n", config.version.major);
+    printf("%d\n", config.version.minor);
 
     //encoder.push(data.pm10, "pm10");
 
     // Print result to the console
-    printf("%f", testData.pm10);
+    printf("%f\n", testData.pm10);
     return 0;
 }
