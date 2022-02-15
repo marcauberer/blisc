@@ -1,0 +1,3 @@
+D:/Dokumente/JustForFun GitHub Clones/studienarbeit-clientlib/encoder/c/bin/CMakeFiles/ClientLib_run.dir
+D:/Dokumente/JustForFun GitHub Clones/studienarbeit-clientlib/encoder/c/bin/CMakeFiles/edit_cache.dir
+D:/Dokumente/JustForFun GitHub Clones/studienarbeit-clientlib/encoder/c/bin/CMakeFiles/rebuild_cache.dir

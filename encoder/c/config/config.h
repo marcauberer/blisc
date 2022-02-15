@@ -18,4 +18,4 @@ struct EncoderConfig {
 };
 
 // Functions
-int loadConfig(const char* configPath);
+int loadConfig(struct EncoderConfig* config, const char* configPath);

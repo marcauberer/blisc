@@ -13,7 +13,9 @@ int main(int argc, char const *argv[]) {
     // Encode test payload
     struct TestData testData = { 12.43, 6.14, 25.124, 78.01, 100001.9 };
 
-    
+    struct EncoderConfig config;
+    loadConfig(&config, "../../config/client-config.bin");
+    printf("%d", config.version.major);
 
     //encoder.push(data.pm10, "pm10");
 
