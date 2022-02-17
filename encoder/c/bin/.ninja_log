@@ -1,7 +1,0 @@
-# ninja log v5
-8	87	6666278564361773	CMakeFiles/ClientLib_run.dir/config/config.c.obj	233d3043d96ed75a
-2	90	6666278564361773	CMakeFiles/ClientLib_run.dir/main.c.obj	70c83afde1a85b1a
-90	366	6666278565471790	ClientLib_run.exe	593f12e1a61fbbc
-8	85	6666279108729258	CMakeFiles/ClientLib_run.dir/config/config.c.obj	233d3043d96ed75a
-1	89	6666279108729258	CMakeFiles/ClientLib_run.dir/main.c.obj	70c83afde1a85b1a
-89	363	6666279109789307	ClientLib_run.exe	593f12e1a61fbbc
