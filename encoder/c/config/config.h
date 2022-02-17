@@ -14,7 +14,7 @@ struct EncoderConfigField {
 
 struct EncoderConfig {
     struct EncoderConfigVersion version;
-    struct EncoderConfigField fields[];
+    struct EncoderConfigField* fields;
 };
 
 // Functions

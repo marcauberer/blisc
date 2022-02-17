@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 )
@@ -63,29 +64,34 @@ func loadConfigFromFile(config *EncoderConfig, configPath string) error {
 	return json.Unmarshal(content, &config)
 }
 
-func writeConfigToBinary(config *EncoderConfig, binaryFile *os.File) {
+func writeConfigToBinary(config *EncoderConfig, binaryFile *os.File) error {
 	// Write version spec major
-	binary.Write(binaryFile, binary.BigEndian, uint32(config.Version.Major))
+	binary.Write(binaryFile, binary.LittleEndian, uint32(config.Version.Major))
 	// Write version spec minor
-	binary.Write(binaryFile, binary.BigEndian, uint32(config.Version.Minor))
+	binary.Write(binaryFile, binary.LittleEndian, uint32(config.Version.Minor))
 	// Write field count
-	binary.Write(binaryFile, binary.BigEndian, uint32(len(config.Fields)))
+	binary.Write(binaryFile, binary.LittleEndian, uint32(len(config.Fields)))
 	// Write fields
 	for _, field := range config.Fields {
+		// Check if lenth of the field is smaller than 100
+		if len(field.Name) >= 100 {
+			return errors.New("A field name is longer than 99 characters")
+		}
 		// Write field name
 		nameNullTerminated := field.Name + string(rune(0))
-		binary.Write(binaryFile, binary.BigEndian, []byte(nameNullTerminated))
+		binary.Write(binaryFile, binary.LittleEndian, []byte(nameNullTerminated))
 		// Write field type
-		binary.Write(binaryFile, binary.BigEndian, field.typeToInt())
+		binary.Write(binaryFile, binary.LittleEndian, field.typeToInt())
 		// Write position
-		binary.Write(binaryFile, binary.BigEndian, uint32(field.Pos))
+		binary.Write(binaryFile, binary.LittleEndian, uint32(field.Pos))
 		// Write length
-		binary.Write(binaryFile, binary.BigEndian, uint32(field.Len))
+		binary.Write(binaryFile, binary.LittleEndian, uint32(field.Len))
 		// Write bias
-		binary.Write(binaryFile, binary.BigEndian, uint32(field.Bias))
+		binary.Write(binaryFile, binary.LittleEndian, uint32(field.Bias))
 		// Write multiplicator
-		binary.Write(binaryFile, binary.BigEndian, field.Mul)
+		binary.Write(binaryFile, binary.LittleEndian, field.Mul)
 	}
+	return nil
 }
 
 func main() {

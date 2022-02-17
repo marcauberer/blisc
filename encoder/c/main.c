@@ -16,8 +16,6 @@ int main(int argc, char const *argv[]) {
 
     struct EncoderConfig config;
     loadConfig(&config, "../../config/client-config.bin");
-    printf("%d\n", config.version.major);
-    printf("%d\n", config.version.minor);
 
     //encoder.push(data.pm10, "pm10");
 
