@@ -37,8 +37,7 @@ jobs:
 
       - name: Prepare environment
         run: |
-          go version
-          go get -u golang.org/x/lint/golint
+          go install golang.org/x/lint/golint@latest
           go mod vendor
           
       - name: Run build
