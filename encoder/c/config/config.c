@@ -38,7 +38,7 @@ int loadConfig(struct EncoderConfig* config, const char* configPath) {
         // Read pos
         (void)!fread(&fields[i].pos, 4, 1, binaryFile);
 
-        // Read type
+        // Read len
         (void)!fread(&fields[i].len, 4, 1, binaryFile);
 
         // Read bias
