@@ -20,9 +20,14 @@ int main(int argc, char const *argv[]) {
     struct EncoderConfig config;
     loadConfig(&config, "../../config/client-config.bin");
     encoder.encoderConfig = &config;
+    initializeEncoder(&encoder);
 
     // Encode tets data
     encodeDouble(&encoder, testData.pm10, "pm10");
+    encodeDouble(&encoder, testData.pm2_5, "pm2_5");
+    encodeDouble(&encoder, testData.temperature, "temperature");
+    encodeDouble(&encoder, testData.humidity, "humidity");
+    encodeDouble(&encoder, testData.pressure, "pressure");
 
     // Print result to the console
     printf("%f\n", testData.pm10);

@@ -1,6 +1,6 @@
 # ClientLib
 
-Idee von Julien: Wurzelfunktion#
+Idee von Julien: Wurzelfunktion
 
 ## ToDo
 - Go Benchmark für Größe pro DS
