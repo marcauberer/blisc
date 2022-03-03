@@ -1,5 +1,4 @@
 project(ClientLib)
-set(BINARY ${CMAKE_PROJECT_NAME})
 
 set(SOURCES
 	main.c
@@ -10,4 +9,4 @@ set(SOURCES
 	internal/output.c
 	internal/output.h)
 
-add_executable(${BINARY}_run ${SOURCES})
+add_executable(${CMAKE_PROJECT_NAME}_run ${SOURCES})
