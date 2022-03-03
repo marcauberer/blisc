@@ -6,4 +6,7 @@ struct EncodingOutput {
     long long cursorPos;
 };
 
-int pushLongLong(struct EncodingOutput* output, long long value, long long len);
+int pushUInt64(struct EncodingOutput* output, long long value, unsigned int len);
+int pushUInt32(struct EncodingOutput* output, long value, unsigned int len);
+int pushUInt16(struct EncodingOutput* output, int value, unsigned int len);
+int pushUInt8(struct EncodingOutput* output, short value, unsigned int len);

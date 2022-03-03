@@ -1,6 +1,6 @@
 #include "output.h"
 
-int pushLongLong(struct EncodingOutput* o, long long value, long long len) {
+int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
     // Get only the least n bytes of the input (n = len)
     value = value & ((1 << len) - 1);
     // Pre-calculate some important numbers
@@ -37,4 +37,16 @@ int pushLongLong(struct EncodingOutput* o, long long value, long long len) {
 
 
     return 0;
+}
+
+int pushUInt32(struct EncodingOutput* o, long value, unsigned int len) {
+
+}
+
+int pushUInt16(struct EncodingOutput* o, int value, unsigned int len) {
+
+}
+
+int pushUInt8(struct EncodingOutput* o, short value, unsigned int len) {
+
 }
