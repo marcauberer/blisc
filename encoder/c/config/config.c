@@ -4,13 +4,12 @@
 #include <string.h>
 #include <stdint.h>
 
+const int CONFIG_ERR_LOAD_FAILED = -1;
+
 int loadConfig(struct EncoderConfig* config, const char* configPath) {
     // Cancel if the file cannot be opened
     FILE* binaryFile = fopen(configPath, "rb");
-    if (!binaryFile) {
-        printf("Could not open file");
-        return -1;
-    }
+    if (!binaryFile) return CONFIG_ERR_LOAD_FAILED;
 
     // Read major version
     (void)!fread(&config->version.major, 4, 1, binaryFile);
@@ -19,18 +18,16 @@ int loadConfig(struct EncoderConfig* config, const char* configPath) {
     (void)!fread(&config->version.minor, 4, 1, binaryFile);
 
     // Read field count
-    int fieldCount;
-    (void)!fread(&fieldCount, 4, 1, binaryFile);
-    struct EncoderConfigField fields[fieldCount];
+    (void)!fread(&config->fieldCount, 4, 1, binaryFile);
+    struct EncoderConfigField fields[config->fieldCount];
 
     // Read the fields
-    for (int i = 0; i < fieldCount; i++) {
+    for (int i = 0; i < config->fieldCount; i++) {
         // Read field name char by char
         char fieldName[100];
         int j = 0;
         while ((fieldName[j] = fgetc(binaryFile)) != '\0') j++;
         fields[j].name = fieldName;
-        printf("Field name: %s\n", fieldName);
 
         // Read type
         (void)!fread(&fields[i].type, 1, 1, binaryFile);
@@ -53,4 +50,10 @@ int loadConfig(struct EncoderConfig* config, const char* configPath) {
     fclose(binaryFile);
 
     return 0;
+}
+
+int getTotalConfigLength(struct EncoderConfig* config) {
+    if (config->fieldCount == 0) return 0;
+    struct EncoderConfigField lastField = config->fields[config->fieldCount -1];
+    return lastField.pos + lastField.len;
 }
