@@ -2,6 +2,7 @@ package encoder
 
 import (
 	"clientlib-encoder/internal"
+	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,6 +31,55 @@ func (e Encoder) LoadConfigFromJSON(configBytes []byte) error {
 	return json.Unmarshal(configBytes, &e.Config)
 }
 
+// LoadConfigFromBinary parses a configuration from a binary and attaches it to the encoder
+func (e Encoder) LoadConfigFromBinary(configBytes []byte) error {
+	byteCounter := 0
+	// Major version
+	e.Config.Version.Major = int(binary.LittleEndian.Uint32(configBytes[0:4])) // 4 bytes
+	byteCounter += 4
+	// Minor version
+	e.Config.Version.Minor = int(binary.LittleEndian.Uint32(configBytes[4:8])) // 4 bytes
+	byteCounter += 4
+	// Field count
+	fieldCount := binary.LittleEndian.Uint32(configBytes[8:12]) // 4 bytes
+	byteCounter += 4
+	for i := 0; i < int(fieldCount); i++ {
+		var field EncoderConfigField
+
+		// Field name
+		for configBytes[byteCounter] != '\x00' {
+			field.Name += string(configBytes[byteCounter])
+			byteCounter++
+		}
+		byteCounter++
+
+		// Field type
+		fieldType := int(configBytes[byteCounter]) // 1 byte
+		field.setTypeString(fieldType)
+		byteCounter += 1
+
+		// Field pos
+		field.Pos = uint(binary.LittleEndian.Uint32(configBytes[byteCounter : byteCounter+4])) // 4 bytes
+		byteCounter += 4
+
+		// Field length
+		field.Len = uint(binary.LittleEndian.Uint32(configBytes[byteCounter : byteCounter+4])) // 4 bytes
+		byteCounter += 4
+
+		// Field bias
+		field.Bias = int(binary.LittleEndian.Uint32(configBytes[byteCounter : byteCounter+4])) // 4 bytes
+		byteCounter += 4
+
+		// Field mul
+		field.Mul = math.Float64frombits(binary.LittleEndian.Uint64(configBytes[byteCounter : byteCounter+8])) // 8 bytes
+		byteCounter += 8
+
+		// Append field to the list of fields
+		e.Config.Fields = append(e.Config.Fields, field)
+	}
+	return nil
+}
+
 func (e Encoder) LoadConfigFromFile(configPath string) error {
 	// Read file at file path
 	// #nosec G304
@@ -37,8 +87,11 @@ func (e Encoder) LoadConfigFromFile(configPath string) error {
 	if err != nil {
 		return err
 	}
-	// Parse JSON to config
-	return e.LoadConfigFromJSON(content)
+	// If it is valid JSON, parse the JSON. Otherwise try to read it as binary
+	if json.Valid(content) {
+		return e.LoadConfigFromJSON(content)
+	}
+	return e.LoadConfigFromBinary(content)
 }
 
 // LoadConfigFromUrl parses a configuration from a URL and attaches it to the encoder

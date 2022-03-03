@@ -40,3 +40,16 @@ func (c EncoderConfig) GetTotalLength() uint {
 	lastField := c.Fields[len(c.Fields)-1]
 	return lastField.Pos + lastField.Len
 }
+
+func (f *EncoderConfigField) setTypeString(typeInt int) {
+	switch typeInt {
+	case 0:
+		f.Type = "int"
+	case 1:
+		f.Type = "double"
+	case 2:
+		f.Type = "string"
+	case 3:
+		f.Type = "bool"
+	}
+}
