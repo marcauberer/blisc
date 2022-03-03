@@ -15,6 +15,7 @@ struct Encoder {
 
 // Functions
 int initializeEncoder(struct Encoder* encoder);
+struct EncoderConfigField* findConfigField(struct EncoderConfig* c, char* name);
 int encodeInt(struct Encoder* encoder, int value, char* name);
 int encodeDouble(struct Encoder* encoder, double value, char* name);
 int encodeString(struct Encoder* encoder, char* value, char* name);

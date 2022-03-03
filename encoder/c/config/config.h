@@ -10,7 +10,7 @@ struct EncoderConfigVersion {
 };
 
 struct EncoderConfigField {
-    char* name;
+    char name[100];
     int type;
     unsigned int pos;
     unsigned int len;
@@ -21,7 +21,7 @@ struct EncoderConfigField {
 struct EncoderConfig {
     struct EncoderConfigVersion version;
     int fieldCount;
-    struct EncoderConfigField* fields;
+    struct EncoderConfigField fields[100];
 };
 
 // Functions
