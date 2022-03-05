@@ -15,17 +15,17 @@ int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
 	int posLow = thisBufferBitsFree > len ? 0 : len - thisBufferBitsFree;
 	mask64 bitMask = createBitmask64ForRange(len, posLow);
 	int leftShift = thisBufferBitsFree - len;
-	o.buffer |= (value & bitMask) << leftShift >> posLow;
+	o->buffer |= (value & bitMask) << leftShift >> posLow;
 	int inputCursorPos = thisBufferBitsFree;
 	if (thisBufferBitsAlloc + len < 8) {
 		// Use same buffer for the next round
-		o.cursorPos += len;
+		o->cursorPos += len;
 		inputCursorPos = len;
 	} else {
 		// Write buffer to output array
-		o.bytes[getCurrentOutputIndex(o)] = o.buffer;
-		o.buffer = 0;
-		o.cursorPos += thisBufferBitsFree;
+		o->bytes[getCurrentOutputIndex(o)] = o->buffer;
+		o->buffer = 0;
+		o->cursorPos += thisBufferBitsFree;
 	}
 
 
@@ -48,12 +48,12 @@ int pushUInt8(struct EncodingOutput* o, short value, unsigned int len) {
 }
 
 void conclude(struct EncodingOutput* o) {
-	if (o.buffer > 0) {
-		o.bytes[getCurrentOutputIndex(output)] = o.buffer;
-		o.buffer = 0;
+	if (o->buffer > 0) {
+		o->bytes[getCurrentOutputIndex(o)] = o->buffer;
+		o->buffer = 0;
 	}
 }
 
 unsigned long long getCurrentOutputIndex(struct EncodingOutput* o) {
-	return o.cursorPos / 8;
+	return o->cursorPos / 8;
 }
