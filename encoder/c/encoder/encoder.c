@@ -35,7 +35,7 @@ int encodeInt(struct Encoder* e, int value, char* name) {
     // Apply bias and mul
     value += configField->bias;
     value *= configField->mul;
-    printf("Int: %d\n", value);
+    pushUInt32(e->output, value, configField->len);
 
     return 0;
 }
@@ -49,7 +49,6 @@ int encodeDouble(struct Encoder* e, double value, char* name) {
     value += configField->bias;
     value *= configField->mul;
     pushUInt64(e->output, value, configField->len);
-    printf("Double: %f\n", value);
 
     return 0;
 }

@@ -7,6 +7,8 @@ set(SOURCES
 	encoder/encoder.c
 	encoder/encoder.h
 	internal/output.c
-	internal/output.h)
+	internal/output.h
+	internal/mask.c
+	internal/mask.h)
 
 add_executable(${CMAKE_PROJECT_NAME}_run ${SOURCES})

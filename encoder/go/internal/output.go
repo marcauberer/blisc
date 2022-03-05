@@ -53,11 +53,11 @@ func (o *output) PushUInt64(value uint64, len uint64) error {
 		leftShift = 0
 	}
 	o.buffer |= byte((value & bitMask) << leftShift >> posLow)
-	inputCurserPos := thisBufferBitsFree
+	inputCursorPos := thisBufferBitsFree
 	if thisBufferBitsAlloc+len < 8 {
 		// Use same buffer for the next round
 		o.cursorPos += len
-		inputCurserPos = len
+		inputCursorPos = len
 	} else {
 		// Write buffer to output array
 		o.bytes[o.getCurrentIndex()] = o.buffer
@@ -66,18 +66,18 @@ func (o *output) PushUInt64(value uint64, len uint64) error {
 	}
 	// Step 2: Do insert steps for middle parts
 	if len > 8 {
-		for inputCurserPos < len-8 {
-			bitMask, err := createBitmask64ForRange(len-inputCurserPos-8, len-inputCurserPos)
+		for inputCursorPos < len-8 {
+			bitMask, err := createBitmask64ForRange(len-inputCursorPos-8, len-inputCursorPos)
 			if err != nil {
 				return err
 			}
-			inputCurserPos += 8
-			o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCurserPos))
+			inputCursorPos += 8
+			o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCursorPos))
 			o.cursorPos += 8
 		}
 	}
 	// Step 3: Fill the new buffer
-	if inputCurserPos < len {
+	if inputCursorPos < len {
 		bitMask, err = createBitmask64ForRange(nextBufferBitsAlloc, 0)
 		if err != nil {
 			return err
@@ -105,15 +105,15 @@ func (o *output) PushUInt32(value uint32, len uint64) error {
 	o.buffer |= byte((value & bitMask) >> (len - thisBufferBitsFree))
 	o.bytes[o.getCurrentIndex()] = o.buffer
 	o.cursorPos += thisBufferBitsFree
-	inputCurserPos := thisBufferBitsFree
+	inputCursorPos := thisBufferBitsFree
 	// Do insert steps for middle parts
-	for inputCurserPos < len-8 {
-		bitMask, err := createBitmask32ForRange(len-inputCurserPos-8, len-inputCurserPos)
+	for inputCursorPos < len-8 {
+		bitMask, err := createBitmask32ForRange(len-inputCursorPos-8, len-inputCursorPos)
 		if err != nil {
 			return err
 		}
-		inputCurserPos += 8
-		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCurserPos))
+		inputCursorPos += 8
+		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCursorPos))
 		o.cursorPos += 8
 	}
 	// Fill the new buffer
@@ -143,15 +143,15 @@ func (o *output) PushUInt16(value uint16, len uint64) error {
 	o.buffer |= byte((value & bitMask) >> (len - thisBufferBitsFree))
 	o.bytes[o.getCurrentIndex()] = o.buffer
 	o.cursorPos += thisBufferBitsFree
-	inputCurserPos := thisBufferBitsFree
+	inputCursorPos := thisBufferBitsFree
 	// Do insert steps for middle parts
-	for inputCurserPos < len-8 {
-		bitMask, err := createBitmask16ForRange(len-inputCurserPos-8, len-inputCurserPos)
+	for inputCursorPos < len-8 {
+		bitMask, err := createBitmask16ForRange(len-inputCursorPos-8, len-inputCursorPos)
 		if err != nil {
 			return err
 		}
-		inputCurserPos += 8
-		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCurserPos))
+		inputCursorPos += 8
+		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCursorPos))
 		o.cursorPos += 8
 	}
 	// Fill the new buffer
@@ -181,15 +181,15 @@ func (o *output) PushUInt8(value uint8, len uint64) error {
 	o.buffer |= byte((value & bitMask) >> (len - thisBufferBitsFree))
 	o.bytes[o.getCurrentIndex()] = o.buffer
 	o.cursorPos += thisBufferBitsFree
-	inputCurserPos := thisBufferBitsFree
+	inputCursorPos := thisBufferBitsFree
 	// Do insert steps for middle parts
-	for inputCurserPos < len-8 {
-		bitMask, err := createBitmask8ForRange(len-inputCurserPos-8, len-inputCurserPos)
+	for inputCursorPos < len-8 {
+		bitMask, err := createBitmask8ForRange(len-inputCursorPos-8, len-inputCursorPos)
 		if err != nil {
 			return err
 		}
-		inputCurserPos += 8
-		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCurserPos))
+		inputCursorPos += 8
+		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCursorPos))
 		o.cursorPos += 8
 	}
 	// Fill the new buffer
