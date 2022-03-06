@@ -11,12 +11,7 @@ int initializeEncoder(struct Encoder* e) {
     int totalLengthBits = getTotalConfigLength(e->encoderConfig);
     int totalLengthBytes = totalLengthBits / 8;
     if (totalLengthBits % 8 > 0) totalLengthBytes++;
-    // Create output
-    char byteArray[totalLengthBytes];
-    struct EncodingOutput output;
-    output.bytes = byteArray;
-    output.cursorPos = 0;
-    e->output = &output;
+    return totalLengthBytes;
 }
 
 struct EncoderConfigField* findConfigField(struct EncoderConfig* c, char* name) {
@@ -36,6 +31,7 @@ int encodeInt(struct Encoder* e, int value, char* name) {
     value += configField->bias;
     value *= configField->mul;
     pushUInt32(e->output, value, configField->len);
+    printf("Stringified: %s\n", e->output);
 
     return 0;
 }

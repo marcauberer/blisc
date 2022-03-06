@@ -1,5 +1,6 @@
 #include "output.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "mask.h"
 
 int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
@@ -27,7 +28,21 @@ int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
 		o->buffer = 0;
 		o->cursorPos += thisBufferBitsFree;
 	}
-
+	// Step 2: Do insert steps for middle parts
+	if (len > 8) {
+		while (inputCursorPos < len - 8) {
+			bitMask = createBitmask64ForRange(len - inputCursorPos - 8, len - inputCursorPos);
+			inputCursorPos += 8;
+			o->bytes[getCurrentOutputIndex(o)] = (value & bitMask) >> (len - inputCursorPos);
+			o->cursorPos += 8;
+		}
+	}
+	// Step 4: Fill the new buffer
+	if (inputCursorPos < len) {
+		bitMask = createBitmask64ForRange(nextBufferBitsAlloc, 0);
+		o->buffer = (value & bitMask) << nextBufferBitsFree;
+		o->cursorPos += nextBufferBitsAlloc;
+	}
 
     return 0;
 }
