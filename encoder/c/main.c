@@ -3,16 +3,6 @@
 #include "config/config.h"
 #include "encoder/encoder.h"
 
-#define BYTE_TO_BINARY(b)  \
-  (b & 0x80 ? '1' : '0'), \
-  (b & 0x40 ? '1' : '0'), \
-  (b & 0x20 ? '1' : '0'), \
-  (b & 0x10 ? '1' : '0'), \
-  (b & 0x08 ? '1' : '0'), \
-  (b & 0x04 ? '1' : '0'), \
-  (b & 0x02 ? '1' : '0'), \
-  (b & 0x01 ? '1' : '0') 
-
 struct TestData {
     double pm10;
     double pm2_5;
@@ -46,10 +36,9 @@ int main(int argc, char const *argv[]) {
     encodeDouble(&encoder, testData.humidity, "humidity");
     encodeDouble(&encoder, testData.pressure, "pressure");
 
-    for (int i = 0; i < encodedSize; i++)
-        printf("Output %d: %c%c%c%c%c%c%c%c\n", i, BYTE_TO_BINARY(encoder.output->bytes[i]));
+    char result[encodedSize * 9]; // Allocate enough for the spaces between the blocks and the NULL terminator
+    outputToString(encoder.output, result, encodedSize);
+    printf("Stringified: %s\n", result);
 
-    // Print result to the console
-    printf("%f\n", testData.pm10);
     return 0;
 }
