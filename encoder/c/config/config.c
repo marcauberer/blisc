@@ -19,32 +19,28 @@ int loadConfig(struct EncoderConfig* config, const char* configPath) {
 
     // Read field count
     (void)!fread(&config->fieldCount, 4, 1, binaryFile);
-    struct EncoderConfigField fields[config->fieldCount];
 
     // Read the fields
     for (int i = 0; i < config->fieldCount; i++) {
         // Read field name char by char
-        char fieldName[100];
         int j = 0;
-        while ((fieldName[j] = fgetc(binaryFile)) != '\0') j++;
-        fields[j].name = fieldName;
+        while ((config->fields[i].name[j] = fgetc(binaryFile)) != '\0') j++;
 
         // Read type
-        (void)!fread(&fields[i].type, 1, 1, binaryFile);
+        (void)!fread(&config->fields[i].type, 1, 1, binaryFile);
 
         // Read pos
-        (void)!fread(&fields[i].pos, 4, 1, binaryFile);
+        (void)!fread(&config->fields[i].pos, 4, 1, binaryFile);
 
         // Read len
-        (void)!fread(&fields[i].len, 4, 1, binaryFile);
+        (void)!fread(&config->fields[i].len, 4, 1, binaryFile);
 
         // Read bias
-        (void)!fread(&fields[i].bias, 4, 1, binaryFile);
+        (void)!fread(&config->fields[i].bias, 4, 1, binaryFile);
 
         // Read mul
-        (void)!fread(&fields[i].mul, 8, 1, binaryFile);
+        (void)!fread(&config->fields[i].mul, 8, 1, binaryFile);
     }
-    config->fields = fields;
 
     // Close binary file
     fclose(binaryFile);
