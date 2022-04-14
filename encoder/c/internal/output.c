@@ -53,6 +53,13 @@ int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
 		o->buffer = (value & bitMask) << nextBufferBitsFree;
 		o->cursorPos += nextBufferBitsAlloc;
 	}
+
+
+	char result[8 * 9]; // Allocate enough for the spaces between the blocks and the NULL terminator
+    outputToString(o, result, 8);
+    printf("Stringified: %s\n", result);
+
+
     return 0;
 }
 
