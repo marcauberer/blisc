@@ -53,6 +53,13 @@ int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
 		o->buffer = (value & bitMask) << nextBufferBitsFree;
 		o->cursorPos += nextBufferBitsAlloc;
 	}
+
+
+	char result[8 * 9]; // Allocate enough for the spaces between the blocks and the NULL terminator
+    outputToString(o, result, 8);
+    printf("Stringified: %s\n", result);
+
+
     return 0;
 }
 
@@ -67,7 +74,7 @@ int pushUInt32(struct EncodingOutput* o, long value, unsigned int len) {
 	int nextBufferBitsFree = 8 - nextBufferBitsAlloc;
     // Step 1: Fill the rest of the old buffer
 	int posLow = thisBufferBitsFree > len ? 0 : len - thisBufferBitsFree;
-	mask64 bitMask = createBitmask32ForRange(len, posLow);
+	mask32 bitMask = createBitmask32ForRange(len, posLow);
 	int leftShift = thisBufferBitsFree - len;
 	o->buffer |= (value & bitMask) << leftShift >> posLow;
 	int inputCursorPos = thisBufferBitsFree;
@@ -110,7 +117,7 @@ int pushUInt16(struct EncodingOutput* o, int value, unsigned int len) {
 	int nextBufferBitsFree = 8 - nextBufferBitsAlloc;
     // Step 1: Fill the rest of the old buffer
 	int posLow = thisBufferBitsFree > len ? 0 : len - thisBufferBitsFree;
-	mask64 bitMask = createBitmask16ForRange(len, posLow);
+	mask16 bitMask = createBitmask16ForRange(len, posLow);
 	int leftShift = thisBufferBitsFree - len;
 	o->buffer |= (value & bitMask) << leftShift >> posLow;
 	int inputCursorPos = thisBufferBitsFree;
@@ -153,7 +160,7 @@ int pushUInt8(struct EncodingOutput* o, short value, unsigned int len) {
 	int nextBufferBitsFree = 8 - nextBufferBitsAlloc;
     // Step 1: Fill the rest of the old buffer
 	int posLow = thisBufferBitsFree > len ? 0 : len - thisBufferBitsFree;
-	mask64 bitMask = createBitmask8ForRange(len, posLow);
+	mask8 bitMask = createBitmask8ForRange(len, posLow);
 	int leftShift = thisBufferBitsFree - len;
 	o->buffer |= (value & bitMask) << leftShift >> posLow;
 	int inputCursorPos = thisBufferBitsFree;
