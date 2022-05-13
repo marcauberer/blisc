@@ -1,23 +1,41 @@
-# ClientLib
+# Blisc - Binary low-bandwith IoT sensor compression
 
-Idee von Julien: Wurzelfunktion
+Blisc is a compression library for low-bandwith devices/networks like Microcontrollers in an IoT context, e.g. sensors to send structured time row data. It takes advantage of knowing how the structure of the particular records look like. We called that principle "semantic compression".
 
-## ToDo
-- Go Benchmark für Größe pro DS
-- Encoder in C schreiben
-- Encoding-Zeit vergleichen gegen Zip / zlib / brotli (Led blinken lassen und Zeit messen)
+Up to now, we support the following implementations of encoder and decoder.
+
+### Encoder
+
+- [C](./encoder/c)
+- [Go](./encoder/go)
+
+### Decoder
+
+- [Go](./decoder/go)
+
+## Comparison with general purpose algorithms
+
+### Benchmark setup
+
+**System:**
+
+- Linux Ubuntu server
+- 4 Core CPU (2,4 GHz)
+- 8 GB RAM
+
+**[Original file](./media/test-data.json)**
+
+- 100.000 randomly generated records
+- five Fields per record (two pm values, temperature, humidity, air pressure),
+- file size is 12.563 MB
+
+### Benchmark results
+
+![Compression benchmark](./media/benchmark.png "Benchmark")
 
 ## Limitations
 ### C Implementation
 - Only up to 100 fields
 - Field names only up to 99 chars
 
-## Comparison with ZIP
-- Encoded record sizes are always the same with the Client Lib
-- For the pm example data, this is a size of 8 bytes
-
-Client Lib with 1000 Records:     8000 bytes ≈ 7.8 kiB
-JSON ZIP with 1000 Records:       28009 bytes ≈ 27.4 kiB
-BSON ZIP with 1000 Records:       -
-
-© Marc Auberer 2021
+© Marc Auberer 2021-2022
