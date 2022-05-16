@@ -69,3 +69,20 @@ func createBitmask8ForRange(posHigh, posLow uint64) (uint8, error) {
 	mask ^= (1 << posLow) - 1
 	return mask, nil
 }
+
+func createBitmask1ForRange(posHigh, posLow uint64) (uint8, error) {
+	// If posLow > posHigh, swap the values with the XOR swap algorithm
+	if posLow > posHigh {
+		posHigh ^= posLow
+		posLow ^= posHigh
+		posHigh ^= posLow
+	}
+	// Check if posHigh exceeds range
+	if posHigh > 1 {
+		return 0, fmt.Errorf("the stated bitmask range [%d,%d] was invalid", posLow, posHigh)
+	}
+	// Create bitmask
+	mask := uint8((1 << posHigh) - 1)
+	mask ^= (1 << posLow) - 1
+	return mask, nil
+}

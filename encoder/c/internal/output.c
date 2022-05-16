@@ -14,7 +14,6 @@
   (b & 0x01 ? '1' : '0') 
 
 int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
-	printf("Int64: %llu\n", value);
     // Get only the least n bytes of the input (n = len)
     value = value & ((1 << len) - 1);
     // Pre-calculate some important numbers
@@ -54,17 +53,10 @@ int pushUInt64(struct EncodingOutput* o, long long value, unsigned int len) {
 		o->cursorPos += nextBufferBitsAlloc;
 	}
 
-
-	char result[8 * 9]; // Allocate enough for the spaces between the blocks and the NULL terminator
-    outputToString(o, result, 8);
-    printf("Stringified: %s\n", result);
-
-
     return 0;
 }
 
 int pushUInt32(struct EncodingOutput* o, long value, unsigned int len) {
-	printf("Int32: %llu\n", value);
     // Get only the least n bytes of the input (n = len)
     value = value & ((1 << len) - 1);
     // Pre-calculate some important numbers
@@ -107,7 +99,6 @@ int pushUInt32(struct EncodingOutput* o, long value, unsigned int len) {
 }
 
 int pushUInt16(struct EncodingOutput* o, int value, unsigned int len) {
-	printf("Int16: %llu\n", value);
     // Get only the least n bytes of the input (n = len)
     value = value & ((1 << len) - 1);
     // Pre-calculate some important numbers
@@ -150,7 +141,6 @@ int pushUInt16(struct EncodingOutput* o, int value, unsigned int len) {
 }
 
 int pushUInt8(struct EncodingOutput* o, short value, unsigned int len) {
-	printf("Int8: %llu\n", value);
     // Get only the least n bytes of the input (n = len)
     value = value & ((1 << len) - 1);
     // Pre-calculate some important numbers
@@ -190,6 +180,48 @@ int pushUInt8(struct EncodingOutput* o, short value, unsigned int len) {
 		o->cursorPos += nextBufferBitsAlloc;
 	}
     return 0;
+}
+
+int pushUInt1(struct EncodingOutput* o, short value, unsigned int len) {
+	// Get only the least n bytes of the input (n = len)
+    value = value & ((1 << len) - 1);
+    // Pre-calculate some important numbers
+	int thisBufferBitsAlloc = o->cursorPos % 8;
+	int thisBufferBitsFree = 8 - thisBufferBitsAlloc;
+	int nextBufferBitsAlloc = (len - thisBufferBitsFree) % 8;
+	int nextBufferBitsFree = 8 - nextBufferBitsAlloc;
+    // Step 1: Fill the rest of the old buffer
+	int posLow = thisBufferBitsFree > len ? 0 : len - thisBufferBitsFree;
+	mask1 bitMask = createBitmask1ForRange(len, posLow);
+	int leftShift = thisBufferBitsFree - len;
+	o->buffer |= (value & bitMask) << leftShift >> posLow;
+	int inputCursorPos = thisBufferBitsFree;
+	if (thisBufferBitsAlloc + len < 8) {
+		// Use same buffer for the next round
+		o->cursorPos += len;
+		inputCursorPos = len;
+	} else {
+		// Write buffer to output array
+		o->bytes[getCurrentOutputIndex(o)] = o->buffer;
+		o->buffer = 0;
+		o->cursorPos += thisBufferBitsFree;
+	}
+	// Step 2: Do insert steps for middle parts
+	if (len > 8) {
+		while (inputCursorPos < len - 8) {
+			bitMask = createBitmask1ForRange(len - inputCursorPos - 8, len - inputCursorPos);
+			inputCursorPos += 8;
+			o->bytes[getCurrentOutputIndex(o)] = (value & bitMask) >> (len - inputCursorPos);
+			o->cursorPos += 8;
+		}
+	}
+	// Step 4: Fill the new buffer
+	if (inputCursorPos < len) {
+		bitMask = createBitmask1ForRange(nextBufferBitsAlloc, 0);
+		o->buffer = (value & bitMask) << nextBufferBitsFree;
+		o->cursorPos += nextBufferBitsAlloc;
+	}
+	return 0;
 }
 
 void conclude(struct EncodingOutput* o) {

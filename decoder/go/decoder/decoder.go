@@ -1,7 +1,7 @@
 package decoder
 
 import (
-	"clientlib-decoder/internal"
+	"blisc-decoder/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -145,16 +145,19 @@ func (d Decoder) Decode(encoded []byte, output interface{}) error {
 		// Apply mul and bias in reverse
 		switch field.Type {
 		case "int":
-
+			intValue := int64(value)
+			intValue /= int64(field.Mul)
+			intValue -= int64(field.Bias)
+			pointToField.SetUint(uint64(intValue))
 		case "double":
 			doubleValue := float64(value)
 			doubleValue /= float64(field.Mul)
 			doubleValue -= float64(field.Bias)
 			pointToField.SetFloat(doubleValue)
 		case "string":
-
+			// ToDo
 		case "bool":
-
+			pointToField.SetBool(value == 1)
 		}
 	}
 	return nil

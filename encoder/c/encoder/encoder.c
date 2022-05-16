@@ -7,10 +7,14 @@ const int ENCODER_ERR_CONFIG_NOT_SET = -1;
 int initializeEncoder(struct Encoder* e) {
     // Abort if config is not set
     if (!e->encoderConfig) return ENCODER_ERR_CONFIG_NOT_SET;
+
     // Calculate total length of output
     int totalLengthBits = getTotalConfigLength(e->encoderConfig);
     int totalLengthBytes = totalLengthBits / 8;
     if (totalLengthBits % 8 > 0) totalLengthBytes++;
+
+    // Pre-compute bit masks
+    
     return totalLengthBytes;
 }
 
@@ -31,7 +35,6 @@ int encodeInt(struct Encoder* e, int value, char* name) {
     value += configField->bias;
     value *= configField->mul;
     pushUInt32(e->output, value, configField->len);
-    printf("Stringified: %s\n", e->output);
 
     return 0;
 }
@@ -63,6 +66,7 @@ int encodeBool(struct Encoder* e, bool value, char* name) {
     if (!e->encoderConfig) return ENCODER_ERR_CONFIG_NOT_SET;
     // Get config field
     struct EncoderConfigField* configField = findConfigField(e->encoderConfig, name);
+    pushUInt1(e->output, value, configField->len);
 
     return 0;
 }

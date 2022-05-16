@@ -1,7 +1,7 @@
 package encoder
 
 import (
-	"clientlib-encoder/internal"
+	"blisc-encoder/internal"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
@@ -178,13 +178,13 @@ func (e Encoder) Encode(input interface{}) ([]byte, error) {
 			}
 			// Apply bias and mul
 			boolValue := value.Bool()
-			intValue := uint64(0)
+			intValue := uint8(0)
 			if boolValue {
 				intValue = 1
 			}
 			fmt.Println("Bool:", intValue)
 			// Push to output byte array
-			err := output.PushUInt64(intValue, uint64(field.Len))
+			err := output.PushUInt1(intValue, uint64(field.Len))
 			if err != nil {
 				return []byte{}, err
 			}

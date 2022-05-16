@@ -1,7 +1,7 @@
 package main
 
 import (
-	"clientlib-encoder/encoder"
+	"blisc-encoder/encoder"
 	"fmt"
 )
 

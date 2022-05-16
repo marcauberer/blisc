@@ -1,7 +1,7 @@
 package main
 
 import (
-	"clientlib-decoder/decoder"
+	"blisc-decoder/decoder"
 	"fmt"
 )
 

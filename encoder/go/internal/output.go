@@ -10,6 +10,8 @@ type Output interface {
 	PushUInt64(uint64, uint64) error
 	PushUInt32(uint32, uint64) error
 	PushUInt16(uint16, uint64) error
+	PushUInt8(uint8, uint64) error
+	PushUInt1(uint8, uint64) error
 	Conclude()
 	ToByteArray() []byte
 	ToString() string
@@ -194,6 +196,44 @@ func (o *output) PushUInt8(value uint8, len uint64) error {
 	}
 	// Fill the new buffer
 	bitMask, err = createBitmask8ForRange(nextBufferBitsAlloc, 0)
+	if err != nil {
+		return err
+	}
+	o.buffer = byte((value & bitMask) << nextBufferBitsFree)
+	o.cursorPos += nextBufferBitsAlloc
+	return nil
+}
+
+// PushUInt1 appends the least significant bit of an uint8 to the output
+func (o *output) PushUInt1(value uint8, len uint64) error {
+	// Get only the least n bytes of the input (n = len)
+	value = value & ((1 << len) - 1)
+	// Pre-calculate some important numbers
+	thisBufferBitsAlloc := o.cursorPos % 8
+	thisBufferBitsFree := 8 - thisBufferBitsAlloc
+	nextBufferBitsAlloc := (len - thisBufferBitsFree) % 8
+	nextBufferBitsFree := 8 - nextBufferBitsAlloc
+	// Fill the rest of the old buffer
+	bitMask, err := createBitmask1ForRange(len, len-thisBufferBitsFree)
+	if err != nil {
+		return err
+	}
+	o.buffer |= byte((value & bitMask) >> (len - thisBufferBitsFree))
+	o.bytes[o.getCurrentIndex()] = o.buffer
+	o.cursorPos += thisBufferBitsFree
+	inputCursorPos := thisBufferBitsFree
+	// Do insert steps for middle parts
+	for inputCursorPos < len-8 {
+		bitMask, err := createBitmask1ForRange(len-inputCursorPos-8, len-inputCursorPos)
+		if err != nil {
+			return err
+		}
+		inputCursorPos += 8
+		o.bytes[o.getCurrentIndex()] = byte((value & bitMask) >> (len - inputCursorPos))
+		o.cursorPos += 8
+	}
+	// Fill the new buffer
+	bitMask, err = createBitmask1ForRange(nextBufferBitsAlloc, 0)
 	if err != nil {
 		return err
 	}
