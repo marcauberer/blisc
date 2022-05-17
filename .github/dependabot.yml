@@ -1,6 +1,6 @@
 version: 2
 updates:
-  # Go dependency updates
+  # Go dependency updates encoder
   - package-ecosystem: gomod
     directory: /encoder/go
     schedule:
@@ -14,7 +14,7 @@ updates:
     assignees:
       - marcauberer
 
-  # Go dependency updates
+  # Go dependency updates decoder
   - package-ecosystem: gomod
     directory: /decoder/go
     schedule:

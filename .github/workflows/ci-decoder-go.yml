@@ -13,15 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        go-version:
-          - 1.17.x
-#          - 1.18.x
-        os:
-          - ubuntu-latest
-          - windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./decoder/go
@@ -33,7 +25,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.18.x
 
       - name: Prepare environment
         run: |
@@ -53,7 +45,7 @@ jobs:
 
       - name: Install GoSec
         shell: bash
-        run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.9.1/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.9.1
+        run: curl -sfL https://raw.githubusercontent.com/securego/gosec/v2.11.0/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.11.0
 
       - name: Run security scan
         run: gosec ./...
